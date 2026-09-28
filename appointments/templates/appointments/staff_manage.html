@@ -1,0 +1,44 @@
+{% extends 'appointments/base.html' %}
+{% block title %}Staff tools | Carepoint{% endblock %}
+{% block content %}
+<section class="page-heading heading-inline">
+    <div>
+        <p class="eyebrow">CLINIC ADMINISTRATION</p>
+        <h1>Staff tools</h1>
+        <p class="lede">Add care team members and patients, or book a visit on a patient's behalf.</p>
+    </div>
+    <div class="staff-actions">
+        <a class="button button-outline" href="{% url 'staff-add-doctor' %}">Add doctor <span aria-hidden="true">+</span></a>
+        <a class="button button-outline" href="{% url 'staff-add-patient' %}">Add patient <span aria-hidden="true">+</span></a>
+        <a class="button button-primary" href="{% url 'staff-book-appointment' %}">Book for patient <span aria-hidden="true">&rarr;</span></a>
+    </div>
+</section>
+
+<section class="staff-directory">
+    <div class="section-heading"><div><p class="eyebrow">CARE TEAM</p><h2>Doctors</h2></div><span class="directory-count">{{ doctors|length }}</span></div>
+    {% if doctors %}
+        {% for doctor in doctors %}
+        <article class="directory-row">
+            <div><h3>{{ doctor }}</h3><p>{{ doctor.specialty }}{% if doctor.phone %} · {{ doctor.phone }}{% endif %}</p></div>
+            <span class="status-pill{% if not doctor.is_accepting_appointments %} status-cancelled{% endif %}">{% if doctor.is_accepting_appointments %}Accepting patients{% else %}Not accepting{% endif %}</span>
+        </article>
+        {% endfor %}
+    {% else %}
+        <p class="directory-empty">No doctors added yet.</p>
+    {% endif %}
+</section>
+
+<section class="staff-directory">
+    <div class="section-heading"><div><p class="eyebrow">PATIENT ACCOUNTS</p><h2>Patients</h2></div><span class="directory-count">{{ patients|length }}</span></div>
+    {% if patients %}
+        {% for patient in patients %}
+        <article class="directory-row">
+            <div><h3>{{ patient.get_full_name|default:patient.username }}</h3><p>{{ patient.email }}</p></div>
+            <a href="{% url 'staff-book-appointment' %}?patient={{ patient.pk }}">Book a visit <span aria-hidden="true">&rarr;</span></a>
+        </article>
+        {% endfor %}
+    {% else %}
+        <p class="directory-empty">No patients added yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

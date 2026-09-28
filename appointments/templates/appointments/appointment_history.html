@@ -1,0 +1,19 @@
+{% extends 'appointments/base.html' %}
+{% block title %}Appointments | Carepoint{% endblock %}
+{% block content %}
+<section class="page-heading heading-inline"><div><p class="eyebrow">YOUR CARE RECORD</p><h1>Appointments</h1><p class="lede">Upcoming and previous visits in one place.</p></div><a class="button button-primary" href="{% url 'appointment-booking' %}">Book a visit <span aria-hidden="true">&rarr;</span></a></section>
+{% if appointments %}
+<div class="appointment-list history-list">
+    {% for appointment in appointments %}
+    <article class="appointment-row">
+        <div class="date-block"><strong>{{ appointment.appointment_date|date:'d' }}</strong><span>{{ appointment.appointment_date|date:'M' }}</span></div>
+        <div class="appointment-main"><h3>{{ appointment.doctor }}</h3><p>{{ appointment.doctor.specialty }} · {{ appointment.appointment_time|time:'g:i A' }}</p>{% if appointment.reason %}<p class="reason-preview">{{ appointment.reason }}</p>{% endif %}</div>
+        <span class="status-pill status-{{ appointment.status }}">{{ appointment.get_status_display }}</span>
+        {% if appointment.status == 'scheduled' %}<form method="post" action="{% url 'appointment-cancel' appointment.id %}">{% csrf_token %}<button class="text-button cancel-button" type="submit">Cancel</button></form>{% endif %}
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state"><span class="empty-mark" aria-hidden="true">+</span><div><h3>No appointments yet</h3><p>Schedule a visit with a member of our care team to get started.</p></div><a href="{% url 'appointment-booking' %}">Book a visit <span aria-hidden="true">&rarr;</span></a></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'appointments/base.html' %}
+{% block title %}Care team | Carepoint{% endblock %}
+{% block content %}
+<section class="page-heading"><p class="eyebrow">PEOPLE WHO CARE</p><h1>Meet your care team</h1><p class="lede">Explore the professionals currently welcoming appointments.</p></section>
+{% if doctors %}
+<section class="doctor-list">
+    {% for doctor in doctors %}
+    <article class="doctor-row">
+        <div class="doctor-initial" aria-hidden="true">{{ doctor.user.first_name|first|default:'D' }}</div>
+        <div class="doctor-info"><p class="eyebrow">{{ doctor.specialty }}</p><h2>{{ doctor }}</h2>{% if doctor.bio %}<p>{{ doctor.bio }}</p>{% endif %}{% if doctor.phone %}<p class="doctor-phone">{{ doctor.phone }}</p>{% endif %}</div>
+        <a class="button button-outline" href="{% url 'appointment-booking' %}">Book a visit <span aria-hidden="true">&rarr;</span></a>
+    </article>
+    {% endfor %}
+</section>
+{% else %}
+<div class="empty-state"><span class="empty-mark" aria-hidden="true">+</span><div><h3>Our care team is being updated</h3><p>Please check back soon to see available professionals.</p></div></div>
+{% endif %}
+{% endblock %}

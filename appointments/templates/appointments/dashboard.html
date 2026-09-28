@@ -1,0 +1,33 @@
+{% extends 'appointments/base.html' %}
+{% block title %}Overview | Carepoint{% endblock %}
+{% block content %}
+<section class="welcome-band">
+    <div>
+        <p class="eyebrow">PATIENT OVERVIEW</p>
+        <h1>Good to see you, {{ request.user.first_name|default:request.user.username }}.</h1>
+        <p class="lede">Your health appointments, thoughtfully organized.</p>
+    </div>
+    <a class="button button-light" href="{% url 'appointment-booking' %}">Book an appointment <span aria-hidden="true">&rarr;</span></a>
+</section>
+<section class="summary-row" aria-label="Clinic summary">
+    <div class="summary-item"><span class="summary-number">{{ doctor_count }}</span><span>Care professionals accepting visits</span></div>
+    <div class="summary-item"><span class="summary-number">{{ upcoming_appointments|length }}</span><span>Upcoming visits shown</span></div>
+    <a class="summary-link" href="{% url 'doctors' %}">Meet the care team <span aria-hidden="true">&rarr;</span></a>
+</section>
+<section class="content-section">
+    <div class="section-heading"><div><p class="eyebrow">YOUR SCHEDULE</p><h2>Coming up</h2></div><a href="{% url 'appointment-history' %}">View appointment history</a></div>
+    {% if upcoming_appointments %}
+    <div class="appointment-list">
+        {% for appointment in upcoming_appointments %}
+        <article class="appointment-row">
+            <div class="date-block"><strong>{{ appointment.appointment_date|date:'d' }}</strong><span>{{ appointment.appointment_date|date:'M' }}</span></div>
+            <div class="appointment-main"><h3>{{ appointment.doctor }}</h3><p>{{ appointment.doctor.specialty }} · {{ appointment.appointment_time|time:'g:i A' }}</p></div>
+            <span class="status-pill">{{ appointment.get_status_display }}</span>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state"><span class="empty-mark" aria-hidden="true">+</span><div><h3>No upcoming visits</h3><p>When you book with a care professional, your next appointment will appear here.</p></div><a href="{% url 'appointment-booking' %}">Find a time <span aria-hidden="true">&rarr;</span></a></div>
+    {% endif %}
+</section>
+{% endblock %}

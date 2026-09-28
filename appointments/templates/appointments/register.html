@@ -1,0 +1,23 @@
+{% extends 'appointments/base.html' %}
+{% block title %}Create account | Carepoint{% endblock %}
+{% block content %}
+<section class="auth-layout auth-layout-compact">
+    <div class="auth-photo" role="img" aria-label="A bright, welcoming healthcare clinic"></div>
+    <div class="auth-panel">
+        <p class="eyebrow">GET STARTED</p>
+        <h1>Create your account.</h1>
+        <p class="lede">A simpler way to plan and keep track of your care.</p>
+        <form method="post" class="form-stack">
+            {% csrf_token %}
+            {% for field in form %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+            <button class="button button-primary" type="submit">Create account <span aria-hidden="true">&rarr;</span></button>
+        </form>
+        <p class="auth-switch">Already registered? <a href="{% url 'login' %}">Sign in</a></p>
+    </div>
+</section>
+{% endblock %}

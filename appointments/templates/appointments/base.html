@@ -1,0 +1,41 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Carepoint Appointments{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'appointments/css/site.css' %}">
+    <script src="{% static 'appointments/js/site.js' %}" defer></script>
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="{% if request.user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'login' %}{% endif %}">
+            <span class="brand-mark" aria-hidden="true">C</span>
+            <span>Carepoint <small>HEALTH CLINIC</small></span>
+        </a>
+        {% if request.user.is_authenticated %}
+        <nav class="main-nav" aria-label="Main navigation">
+            <a href="{% url 'dashboard' %}">Overview</a>
+            <a href="{% url 'appointment-booking' %}">Book visit</a>
+            <a href="{% url 'appointment-history' %}">Appointments</a>
+            <a href="{% url 'doctors' %}">Care team</a>
+            {% if request.user.is_staff %}<a href="{% url 'staff-manage' %}">Staff tools</a>{% endif %}
+        </nav>
+        <div class="account-actions">
+            <span class="user-greeting">{{ request.user.first_name|default:request.user.username }}</span>
+            <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="text-button" type="submit">Sign out</button></form>
+        </div>
+        {% else %}
+        <nav class="main-nav"><a href="{% url 'login' %}">Sign in</a><a class="nav-cta" href="{% url 'register' %}">Create account</a></nav>
+        {% endif %}
+    </header>
+    {% if messages %}
+    <div class="message-stack" role="status">
+        {% for message in messages %}<p class="message {{ message.tags }}">{{ message }}</p>{% endfor %}
+    </div>
+    {% endif %}
+    <main class="page-shell">{% block content %}{% endblock %}</main>
+    <footer class="site-footer"><span>Carepoint Health Clinic</span><span>For urgent medical needs, contact your local emergency service.</span></footer>
+</body>
+</html>

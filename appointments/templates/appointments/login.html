@@ -1,0 +1,21 @@
+{% extends 'appointments/base.html' %}
+{% block title %}Sign in | Carepoint{% endblock %}
+{% block content %}
+<section class="auth-layout">
+    <div class="auth-photo" role="img" aria-label="A bright, welcoming healthcare clinic"></div>
+    <div class="auth-panel">
+        <p class="eyebrow">YOUR CARE, IN ONE PLACE</p>
+        <h1>Welcome back.</h1>
+        <p class="lede">Sign in to manage your appointments and stay connected with your care team.</p>
+        <form method="post" class="form-stack">
+            {% csrf_token %}
+            <label for="email">Email address</label>
+            <input id="email" type="email" name="email" autocomplete="username" required>
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password" autocomplete="current-password" required>
+            <button class="button button-primary" type="submit">Sign in <span aria-hidden="true">&rarr;</span></button>
+        </form>
+        <p class="auth-switch">New to Carepoint? <a href="{% url 'register' %}">Create an account</a></p>
+    </div>
+</section>
+{% endblock %}
